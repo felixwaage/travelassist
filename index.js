@@ -12,6 +12,7 @@ const münchen = 8000261;
 stations.full
 
 var date = new Date('2019-05-18T00:00:00.000Z');
+
 var option = {
 	class: 			2, 	// 1st class or 2nd class
 	noICETrains: 		false,
@@ -49,6 +50,11 @@ function getStationIDs(cityname){
 			var Cat1 = [];
 			var Cat2 = [];
 			var CatLow = [];
+
+			if(typeof mainStations === 'undefined'){
+				reject(body.errMsg);
+				return;
+			} 
 
 			for(var i = 0; i < mainStations.length; i++){
 				if(mainStations[i].category === 1) Cat1.push(mainStations[i]);
@@ -88,9 +94,12 @@ async function getByConnection(connections,date){
 
 async function getRoutesByCityList(start,cityList,date){
 	var routesList = [];
-	for(var i = 0; i < cityList; i++){
+	for(var i = 0; i < cityList.length; i++){
 		await getRoute(start,cityList[i].city,date).then((res) => {
 			routesList.push(res);
+		}).catch((err) => {
+			var errMsg = cityList[i].city + " not found!";
+			routesList.push({err:errMsg});
 		})
 	}
 	return routesList;
@@ -116,7 +125,11 @@ function getRoute(start,end,date){
 				getByConnection(connections,date).then((res) => {
 					resolve(res);
 				})
-			})
+			}).catch((err) => {
+				reject(err);
+			}) 
+		}).catch((err) => {
+			reject(err);
 		})
 	})
 }
@@ -133,8 +146,9 @@ app.get('/getPrice/:start/:date', function (req, res) {
 		if(cities[i].population > 300000) largeCities.push(cities[i]);
 	}
 	
-	getRoutesByCityList(start,largeCities,date).then((res) => {
-		console.log(res);
+	getRoutesByCityList(start,largeCities,date).then((connections) => {
+		console.log(connections);
+		res.send(connections);
 	})
 });
 
