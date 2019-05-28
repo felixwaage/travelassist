@@ -9,6 +9,8 @@ var app = express();
 const berlin =  8011160;
 const münchen = 8000261;
 
+const WEATHER_API_KEY = '3aa8e75fdae1e5fbf3d94bacf8b9f114'
+
 stations.full
 
 var date = new Date('2019-05-18T00:00:00.000Z');
@@ -28,14 +30,6 @@ var option = {
 db_price(berlin,münchen,date,option).then( (res) => {
   console.log(res[0]);
 });
-
-function getWeatherInformationByCityName(city,date){
-
-	request(url, {}, (err,res,body) => {
-
-	});
-	
-}
 
 function getStationIDs(cityname){
 	
@@ -121,6 +115,39 @@ function getRoute(start,end,date){
 	})
 }
 
+async function processWeatherInfo(city,date) {
+	var forecast;
+	await getWeatherInformationByCityNameForDay(city,date).then((res) => {
+		forecast = res;
+		console.log("Processing: " + forecast);
+		//do something with the weather forecast
+	});
+	return forecast;
+}
+
+function getWeatherInformationByCityNameForDay(city, date){
+	//var city_country = "London,us"
+	return new Promise(function(resolve,reject){
+		var url = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city+ '&mode=json&APPID='+ WEATHER_API_KEY;
+
+		request(url, {}, (err,res,body) => {
+			if (err) { reject(err); }
+			var weatherO = JSON.parse(res.body);
+			totalForecast = weatherO.list;
+			var forecast = totalForecast.slice(dateToDays(date)*8, dateToDays(date)*8 + 8)
+			resolve( forecast );
+		}); 
+	})
+}
+function dateToDays (date) {
+	var today = new Date();
+	var thatday = new Date(date); //watch out which format the parameter has
+	var daysBetween = thatday.getDay() - today.getDay();
+	daysBetween = daysBetween > 0 ? daysBetween : 7 + daysBetween ;
+	//console.log("client requests weather for " + daysBetween + " days in advance");
+	return daysBetween;
+}
+
 app.get('/getPrice/:start/:date', function (req, res) {
   	console.log(req);
   	var start = req.params.start;
@@ -132,6 +159,9 @@ app.get('/getPrice/:start/:date', function (req, res) {
 	for(var i = 0; i < cities.length; i++){
 		if(cities[i].population > 300000) largeCities.push(cities[i]);
 	}
+	processWeatherInfo(start, date).then((res) => {
+		console.log(res);
+	})
 	
 	getRoutesByCityList(start,largeCities,date).then((res) => {
 		console.log(res);
