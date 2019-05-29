@@ -45,6 +45,39 @@ function generateResultList(startPoint,date){
 	})
 }
 
+async function processWeatherInfo(city,date) {
+	var forecast;
+	await getWeatherInformationByCityNameForDay(city,date).then((res) => {
+		forecast = res;
+		console.log("Processing: " + forecast);
+		//do something with the weather forecast
+	});
+	return forecast;
+}
+
+function getWeatherInformationByCityNameForDay(city, date){
+	//var city_country = "London,us"
+	return new Promise(function(resolve,reject){
+		var url = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city+ '&mode=json&APPID='+ WEATHER_API_KEY;
+
+		request(url, {}, (err,res,body) => {
+			if (err) { reject(err); }
+			var weatherO = JSON.parse(res.body);
+			totalForecast = weatherO.list;
+			var forecast = totalForecast.slice(dateToDays(date)*8, dateToDays(date)*8 + 8)
+			resolve( forecast );
+		}); 
+	})
+}
+function dateToDays (date) {
+	var today = new Date();
+	var thatday = new Date(date); //watch out which format the parameter has
+	var daysBetween = thatday.getDay() - today.getDay();
+	daysBetween = daysBetween > 0 ? daysBetween : 7 + daysBetween ;
+	//console.log("client requests weather for " + daysBetween + " days in advance");
+	return daysBetween;
+}
+
 app.get('/getPrice/:start/:date', function (req, res) {
   	console.log(req);
   	var start = req.params.start;
