@@ -38,9 +38,21 @@ function generateResultList(startPoint,date){
 			console.log(weather);
 
 			for(var i = 0; i < connections.length; i++){
-				console.log(typeof connections[12].length);
+				if(Array.isArray(connections[i])){
+					var connectionsToCity = connections[i];
+					var minPrice;
+					var connectionMinPreis;
+					for(var x = 0; x < connectionsToCity.length;x++){
+						var item = connectionMinPreis[x];
+						if(item.length > 0){
+							for(var y = 0; y < item.length; y++){
+								
+							}
+						}
+					}
+					console.log('BREAK POINT!');
+				}
 			}
-
 		})
 	})
 }
