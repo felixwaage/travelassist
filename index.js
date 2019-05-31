@@ -35,6 +35,8 @@ function startUp(){
 }
 
 async function generateResultList(startPoint,date){
+	//Objekt zur Rückgabe an den Aufrufer
+	var response = [];
 	//Alle Städte durchlaufen
 	for(var i = 0; i < largeCities.length; i++){
 		//Wetterinformationen für Stadt-X
@@ -52,15 +54,22 @@ async function generateResultList(startPoint,date){
 		var rows = weatherInformation.rows;
 		var weatherOnDay = [];
 
-		for(var i = 0; i < rows.length; i++){
-			var day2 = rows[i].dt_value.split(' ');
-			if(day1[0] === day2[0]){ weatherOnDay.push(rows[i]); }
+		for(var x = 0; x < rows.length; x++){
+			var day2 = rows[x].dt_value.split(' ');
+			if(day1[0] === day2[0]){ weatherOnDay.push(rows[x]); }
 		}
 
 		//Aufruf der Wetterbewertung für die Stadt
+		var responseItem = {
+			ranking: i,
+			weather_value: Math.random(),
+			dp_route: connections
+		}
 
-		console.log('BREAK-POINT');
+		response.push(responseItem);
 	}
+
+	return response;
 }
 
 async function processWeatherInfo(city,date) {
@@ -102,7 +111,9 @@ app.post('/api/getRaking', (req,res) => {
 app.get('/api/getPrice/:start/:date', function (req, res) {
   	var start = req.params.start;
   	var date = req.params.date;
-	generateResultList(start,date);
+	generateResultList(start,date).then((response) => {
+		res.send(response);
+	});
 });
 
 app.listen(3000, function () {
