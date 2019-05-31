@@ -1,11 +1,14 @@
 var express = require('express');
 var weather = require('./weather');
+var bodyparser = require('body-parser');
 var db = require('./db');
 
 const fs = require('fs');
 var largeCities = [];
 
 var app = express();
+
+app.use(bodyparser.json());
 
 var date = new Date('2019-05-18T00:00:00.000Z');
 
@@ -36,23 +39,27 @@ function generateResultList(startPoint,date){
 		db.getRoutesByCityList(startPoint,largeCities,date).then((connections) => {
 			console.log(connections);
 			console.log(weather);
-
+			var connectionMinPricesAll = [];
 			for(var i = 0; i < connections.length; i++){
 				if(Array.isArray(connections[i])){
 					var connectionsToCity = connections[i];
-					var minPrice;
 					var connectionMinPreis;
 					for(var x = 0; x < connectionsToCity.length;x++){
-						var item = connectionMinPreis[x];
+						var item = connectionsToCity[x];
 						if(item.length > 0){
 							for(var y = 0; y < item.length; y++){
-								
+								console.log(item[y]);
+								if(y===0) connectionMinPreis = item[y];
+								else{ if(item[y].price.amount < connectionMinPreis.price.amount) connectionMinPreis = item[y]; }
 							}
 						}
+						connectionMinPricesAll.push(connectionMinPreis);
 					}
 					console.log('BREAK POINT!');
 				}
 			}
+		var json = JSON.stringify(connectionMinPricesAll);
+		console.log(json);
 		})
 	})
 }
@@ -90,7 +97,11 @@ function dateToDays (date) {
 	return daysBetween;
 }
 
-app.get('/getPrice/:start/:date', function (req, res) {
+app.post('/api/getRaking', (req,res) => {
+	
+})
+
+app.get('/api/getPrice/:start/:date', function (req, res) {
   	console.log(req);
   	var start = req.params.start;
   	var date = req.params.date;
