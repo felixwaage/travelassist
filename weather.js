@@ -40,7 +40,6 @@ function getWeatherInformationByCityName(city){
 }
 
 function updateWeather(cities){
-	console.log('Start Weather update!');
 	var sql = 'DELETE FROM weather_information;';
 	oDBPool.query(sql, (err,res) => {
 		for(var i = 0; i < cities.length; i++){

@@ -23,52 +23,50 @@ function startUp(){
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 300000) largeCities.push(cities[i]);
+		if(cities[i].population > 2000000) largeCities.push(cities[i]);
 	}
 
 	updateWeather();
 	setInterval(updateWeather,3600000);
 
 	weather.getWeatherByCityName('Duisburg').then((res) => {
-		console.log(res);
+
 	})
 }
 
-function generateResultList(startPoint,date){
-	weather.getAllWeatherInformation().then((weather) => {
-		db.getRoutesByCityList(startPoint,largeCities,date).then((connections) => {
-			console.log(connections);
-			console.log(weather);
-			var connectionMinPricesAll = [];
-			for(var i = 0; i < connections.length; i++){
-				if(Array.isArray(connections[i])){
-					var connectionsToCity = connections[i];
-					var connectionMinPreis;
-					for(var x = 0; x < connectionsToCity.length;x++){
-						var item = connectionsToCity[x];
-						if(item.length > 0){
-							for(var y = 0; y < item.length; y++){
-								console.log(item[y]);
-								if(y===0) connectionMinPreis = item[y];
-								else{ if(item[y].price.amount < connectionMinPreis.price.amount) connectionMinPreis = item[y]; }
-							}
-						}
-						connectionMinPricesAll.push(connectionMinPreis);
-					}
-					console.log('BREAK POINT!');
-				}
-			}
-		var json = JSON.stringify(connectionMinPricesAll);
-		console.log(json);
-		})
-	})
+async function generateResultList(startPoint,date){
+	//Alle Städte durchlaufen
+	for(var i = 0; i < largeCities.length; i++){
+		//Wetterinformationen für Stadt-X
+		var weatherInformation;
+		await weather.getWeatherByCityName(largeCities[i].city).then((res) => { weatherInformation = res });
+		//Verbindungsinformationen für Stadt-X von Stadt-Y
+		var connections;
+		await db.getBestPriceForCity(startPoint,largeCities[i].city,date).then((route) => {
+			connections = route;
+		}).catch((err) => {
+			console.log(err);
+		});
+
+		var day1 = date.split('T');
+		var rows = weatherInformation.rows;
+		var weatherOnDay = [];
+
+		for(var i = 0; i < rows.length; i++){
+			var day2 = rows[i].dt_value.split(' ');
+			if(day1[0] === day2[0]){ weatherOnDay.push(rows[i]); }
+		}
+
+		//Aufruf der Wetterbewertung für die Stadt
+
+		console.log('BREAK-POINT');
+	}
 }
 
 async function processWeatherInfo(city,date) {
 	var forecast;
 	await getWeatherInformationByCityNameForDay(city,date).then((res) => {
 		forecast = res;
-		console.log("Processing: " + forecast);
 		//do something with the weather forecast
 	});
 	return forecast;
@@ -102,7 +100,6 @@ app.post('/api/getRaking', (req,res) => {
 })
 
 app.get('/api/getPrice/:start/:date', function (req, res) {
-  	console.log(req);
   	var start = req.params.start;
   	var date = req.params.date;
 	generateResultList(start,date);

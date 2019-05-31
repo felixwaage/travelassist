@@ -44,8 +44,6 @@ function getStationIDs(cityname){
 }
 
 async function getByConnection(connections,date){
-	console.log(connections);
-
 	var routes = [];
 
 	for(var i = 0; i < connections.length; i++){
@@ -56,6 +54,36 @@ async function getByConnection(connections,date){
 	}	
 
 	return routes;
+}
+
+function getBestPriceForCity(origin,destination,date){
+	return new Promise((resolve,reject) => {
+		getRoutesToCity(origin,destination,date).then((connections) => {
+			var connectionMinPrice;
+			for(var i = 0; i < connections.length; i++){
+				var item = connections[i];
+				if(item.length > 0){
+					for(var y = 0; y < item.length; y++){
+						if(y===0) connectionMinPrice = item[y];
+						else{ if(item[y].price.amount < connectionMinPrice.price.amount) connectionMinPrice = item[y]; }
+					}
+				}
+			}
+			resolve(connectionMinPrice);
+		}).catch((err) => {
+			reject(err);
+		})
+	})
+}
+
+function getRoutesToCity(origin,destination,date){
+	return new Promise((resolve,reject) => {
+		getRoute(origin,destination,date).then((connections) => {
+			resolve(connections);
+		}).catch((err) => {
+			reject(err);
+		});
+	});	
 }
 
 async function getRoutesByCityList(start,cityList,date){
@@ -83,7 +111,6 @@ function getRoute(start,end,date){
 				end = res;
 				for(var i = 0; i<start.length; i++){
 					for(var x = 0; x<end.length; x++){
-						console.log(start[0])
 						connection = {start: start[i],end: end[x]};
 						connections.push(connection);
 					}
@@ -114,5 +141,7 @@ var option = {
 };
 
 module.exports = {
-    getRoutesByCityList
+	getRoutesByCityList,
+	getRoutesToCity,
+	getBestPriceForCity
 }
