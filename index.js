@@ -28,10 +28,7 @@ function startUp(){
 
 	updateWeather();
 	setInterval(updateWeather,3600000);
-
-	weather.getWeatherByCityName('Duisburg').then((res) => {
-
-	})
+	
 }
 
 async function generateResultList(startPoint,date){
