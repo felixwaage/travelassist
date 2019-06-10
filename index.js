@@ -113,6 +113,14 @@ app.get('/api/getPrice/:start/:date', function (req, res) {
 	});
 });
 
+app.get('/api/test/:callback', (req,res) => {
+	res.send('Parameter: '+req.params.callback);
+});
+
+app.get('/api/test/largeCities', (req,res) => {
+	res.send(largeCities);
+});
+
 app.listen(8080, function () {
   console.log('Example app listening on port 3000!');
 });
