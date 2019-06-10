@@ -117,7 +117,7 @@ app.get('/api/test/:callback', (req,res) => {
 	res.send('Parameter: '+req.params.callback);
 });
 
-app.get('/api/test/largeCities', (req,res) => {
+app.get('/api/test2/largeCities', (req,res) => {
 	res.send(largeCities);
 });
 
