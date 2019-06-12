@@ -96,7 +96,7 @@ async function generateResultList(startPoint,date){
 
 
 		var responseItem = {
-			ranking: 3, // TODO
+		ranking: 3, // TODO
 			weather_value: weatherRanking,
 			dp_route: connections
 		}
