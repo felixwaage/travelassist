@@ -29,9 +29,6 @@ function startUp(){
 	updateWeather();
 	setInterval(updateWeather,3600000);
 
-	weather.getWeatherByCityName('Duisburg').then((res) => {
-
-	})
 }
 
 async function generateResultList(startPoint,date){
@@ -60,9 +57,47 @@ async function generateResultList(startPoint,date){
 		}
 
 		//Aufruf der Wetterbewertung für die Stadt
+		for(x = 0; x = rows.length; x++) {
+			var temp = weatherInformation.rows[x].temperature; // In Kelvin; 273.15 Kelvin = 0°C; 1°C = 1Kelvin
+			var hum = weatherInformation.rows[x].humidity; // In %
+			var wind = weatherInformation.rows[x].wind_speed; // In meter/second
+			var cloudiness = weatherInformation.rows[x].clouds; // In %
+
+			var tempPrio = 0.25;
+			var humPrio = 0.25;
+			var windPrio = 0.25;
+			var cloudinessPrio = 0.25;
+
+			// Berechnung tempRanking
+			var tempRanking;
+			if(temp > 306.48) {
+				tempRanking = 100 * tempPrio;
+			} else if(temp < 273.15){
+				tempRanking = 0;
+			} else {
+				tempRanking = (temp - 273.15) * 3 * tempPrio;
+			}
+
+			// Berechnung humRanking
+			var humRanking = hum * humPrio;
+
+			// Berechnung windRanking
+			beaufort = Math.round(Math.pow((wind / 0.836), 2/3));
+			var windRanking = (beaufort -10) * (-1) * 10 * windPrio;
+
+			// Berechnung cloudinessRanking
+			var cloudinessRanking = (cloudiness -100) * (-1) * cloudinessPrio;
+
+			// Endwertberechnung
+			let weatherRankingSum = tempRanking + humRanking + windRanking + cloudinessRanking;
+		}
+		let weatherRanking = weatherRankingSum / rows.length;
+
+
+
 		var responseItem = {
-			ranking: i,
-			weather_value: Math.random(),
+			ranking: 3, // TODO
+			weather_value: weatherRanking,
 			dp_route: connections
 		}
 
@@ -109,8 +144,8 @@ app.post('/api/getRaking', (req,res) => {
 })
 
 app.get('/api/getPrice/:start/:date', function (req, res) {
-  	var start = req.params.start;
-  	var date = req.params.date;
+		var start = req.params.start;
+		var date = req.params.date;
 	generateResultList(start,date).then((response) => {
 		res.send(response);
 	});
