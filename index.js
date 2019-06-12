@@ -35,6 +35,7 @@ function startUp(){
 async function generateResultList(startPoint,date){
 	//Objekt zur Rückgabe an den Aufrufer
 	var response = [];
+	var weatherRankingSum;
 	//Alle Städte durchlaufen
 	for(var i = 0; i < largeCities.length; i++){
 		//Wetterinformationen für Stadt-X
@@ -58,7 +59,7 @@ async function generateResultList(startPoint,date){
 		}
 
 		//Aufruf der Wetterbewertung für die Stadt
-		for(x = 0; x = rows.length; x++) {
+		for(var x = 0; x < rows.length; x++) {
 			var temp = weatherInformation.rows[x].temperature; // In Kelvin; 273.15 Kelvin = 0°C; 1°C = 1Kelvin
 			var hum = weatherInformation.rows[x].humidity; // In %
 			var wind = weatherInformation.rows[x].wind_speed; // In meter/second
@@ -90,22 +91,36 @@ async function generateResultList(startPoint,date){
 			var cloudinessRanking = (cloudiness -100) * (-1) * cloudinessPrio;
 
 			// Endwertberechnung
-			let weatherRankingSum = tempRanking + humRanking + windRanking + cloudinessRanking;
+			var weatherRankingSum = tempRanking + humRanking + windRanking + cloudinessRanking;
 		}
-		let weatherRanking = weatherRankingSum / rows.length;
+		var weatherRanking = weatherRankingSum / rows.length;
 
 
 
 		var responseItem = {
-		ranking: 3, // TODO
+			ranking: null,
 			weather_value: weatherRanking,
-			dp_route: connections
+			db_route: connections
 		}
 
 		response.push(responseItem);
 	}
 
-	return response;
+	return createRanking(response);
+}
+
+function createRanking(responseList){
+	responseList.sort(compareByPrice);
+	console.log(responseList);
+}
+
+function compareByPrice(a,b){
+	const priceA = a.db_route.price.amount;
+	const priceB = b.db_route.price.amount;
+
+	if(priceA>priceB) return 1;
+	else if(priceA<priceB) return -1;
+	else return 0;
 }
 
 async function processWeatherInfo(city,date) {
@@ -144,6 +159,7 @@ app.post('/api/getRaking', (req,res) => {
 	
 })
 
+//http://localhost:3000/api/getPrice/berlin/2019-06-13T00:00:00.000Z
 app.get('/api/getPrice/:start/:date', function (req, res) {
 		var start = req.params.start;
 		var date = req.params.date;
