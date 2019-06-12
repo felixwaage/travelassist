@@ -29,6 +29,7 @@ function startUp(){
 	updateWeather();
 	setInterval(updateWeather,3600000);
 
+	
 }
 
 async function generateResultList(startPoint,date){
@@ -151,6 +152,14 @@ app.get('/api/getPrice/:start/:date', function (req, res) {
 	});
 });
 
-app.listen(3000, function () {
+app.get('/api/test/:callback', (req,res) => {
+	res.send('Parameter: '+req.params.callback);
+});
+
+app.get('/api/test2/largeCities', (req,res) => {
+	res.send(largeCities);
+});
+
+app.listen(8080, function () {
   console.log('Example app listening on port 3000!');
 });
