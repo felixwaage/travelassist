@@ -73,7 +73,6 @@ function getAllWeatherInformation(){
 		});
 	});
 }
-
 module.exports = {
 	updateWeather,
 	getWeatherByCityName,
