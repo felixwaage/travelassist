@@ -23,7 +23,7 @@ function startUp(){
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 1000000) largeCities.push(cities[i]);
+		if(cities[i].population > 2000000) largeCities.push(cities[i]);
 	}
 
 	updateWeather();
@@ -33,6 +33,17 @@ function startUp(){
 }
 
 async function generateResultList(startPoint,date){
+	
+	var origin = {};
+
+	await db.getStationInfoBySearchString(startPoint).then((res) => {
+		origin = {
+			city_name: res.mailingAddress.city,
+			station_name: res.name,
+			lat: res.evaNumbers[0].geographicCoordinates.coordinates[1],
+			long: res.evaNumbers[0].geographicCoordinates.coordinates[0],
+		}
+	});
 	//Objekt zur Rückgabe an den Aufrufer
 	var response = [];
 	var weatherRankingSum;
@@ -102,7 +113,8 @@ async function generateResultList(startPoint,date){
 			weather_value: weatherRanking,
 			weather_information: weatherInformation,
 			db_route: connections,
-			city: largeCities[i]
+			city: largeCities[i],
+			origin
 		}
 
 		response.push(responseItem);

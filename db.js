@@ -4,6 +4,19 @@ var request = require('request');
 
 stations.full
 
+function getStationInfoBySearchString(searchString){
+	return new Promise(function(resolve,reject){
+		var url = 'https://api.deutschebahn.com/stada/v2/stations?searchstring='+searchString+'*';
+		var header = { "Authorization" : "Bearer aafc6963b3c122a3bcf12b7109547308" };
+
+		request(url, {headers: header, json: true }, (err, res, body) => {
+		if (err) { reject(err); }
+			var Station = body.result[0];
+			resolve(Station);
+		});
+	});
+}
+
 function getStationIDs(cityname){
 	
 	return new Promise(function(resolve,reject){
@@ -143,5 +156,6 @@ var option = {
 module.exports = {
 	getRoutesByCityList,
 	getRoutesToCity,
-	getBestPriceForCity
+	getBestPriceForCity,
+	getStationInfoBySearchString
 }
