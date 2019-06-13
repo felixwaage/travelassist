@@ -23,7 +23,7 @@ function startUp(){
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 2000000) largeCities.push(cities[i]);
+		if(cities[i].population > 1000000) largeCities.push(cities[i]);
 	}
 
 	updateWeather();
@@ -100,7 +100,9 @@ async function generateResultList(startPoint,date){
 		var responseItem = {
 			ranking: null,
 			weather_value: weatherRanking,
-			db_route: connections
+			weather_information: weatherInformation,
+			db_route: connections,
+			city: largeCities[i]
 		}
 
 		response.push(responseItem);
@@ -111,7 +113,12 @@ async function generateResultList(startPoint,date){
 
 function createRanking(responseList){
 	responseList.sort(compareByPrice);
-	console.log(responseList);
+
+	for(var i = 0; i < responseList.length; i++){
+		responseList[i].ranking = i;
+	}
+	
+	return responseList;
 }
 
 function compareByPrice(a,b){
@@ -161,6 +168,7 @@ app.post('/api/getRaking', (req,res) => {
 
 //http://localhost:3000/api/getPrice/berlin/2019-06-13T00:00:00.000Z
 app.get('/api/getPrice/:start/:date', function (req, res) {
+		console.log('Request: \nhost:'+req.host+'\nCity: '+req.params.start+'\nDate: '+req.params.date);
 		var start = req.params.start;
 		var date = req.params.date;
 	generateResultList(start,date).then((response) => {
