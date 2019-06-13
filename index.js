@@ -2,6 +2,7 @@ var express = require('express');
 var weather = require('./weather');
 var bodyparser = require('body-parser');
 var db = require('./db');
+var request = require('request');
 
 const fs = require('fs');
 var largeCities = [];
@@ -168,7 +169,7 @@ app.post('/api/getRaking', (req,res) => {
 
 //http://localhost:3000/api/getPrice/berlin/2019-06-13T00:00:00.000Z
 app.get('/api/getPrice/:start/:date', function (req, res) {
-		console.log('Request: \nhost:'+req.host+'\nCity: '+req.params.start+'\nDate: '+req.params.date);
+	console.log('Request: \nhost:'+req.host+'\nCity: '+req.params.start+'\nDate: '+req.params.date);
 		var start = req.params.start;
 		var date = req.params.date;
 	generateResultList(start,date).then((response) => {
@@ -180,10 +181,26 @@ app.get('/api/test/:callback', (req,res) => {
 	res.send('Parameter: '+req.params.callback);
 });
 
+// für moderaten Regen bspw: http://localhost:8080/api/getWeatherIcon/10d
+// für alle Icons siehe https://openweathermap.org/weather-conditions
+app.get('/api/getWeatherIcon/:id', (req,res) => {
+	iconID = req.params.id;
+	//QM TODO: Check einbauen
+	var requestSettings = {
+        url: "http://openweathermap.org/img/w/" + iconID + ".png",
+        method: 'GET',
+        encoding: null
+    };
+	request(requestSettings, (error, response, body) => {
+        res.set('Content-Type', 'image/png');
+        res.send(body);
+    });
+});
+
 app.get('/api/test2/largeCities', (req,res) => {
 	res.send(largeCities);
 });
 
 app.listen(8080, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port 8080!');
 });
