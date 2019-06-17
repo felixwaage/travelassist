@@ -1,0 +1,68 @@
+[
+    {
+        "city": "Berlin",
+        "admin": "Berlin",
+        "country": "Germany",
+        "population_proper": "3094014",
+        "iso2": "DE",
+        "capital": "primary",
+        "lat": "52.516667",
+        "lng": "13.4",
+        "population": "3406000"
+    },
+    {
+        "city": "Hamburg",
+        "admin": "Hamburg",
+        "country": "Germany",
+        "population_proper": "1739117",
+        "iso2": "DE",
+        "capital": "admin",
+        "lat": "53.575323",
+        "lng": "10.01534",
+        "population": "1757000"
+    },
+    {
+        "city": "Munich",
+        "admin": "Bavaria",
+        "country": "Germany",
+        "population_proper": "1260391",
+        "iso2": "DE",
+        "capital": "admin",
+        "lat": "48.15",
+        "lng": "11.583333",
+        "population": "1275000"
+    },
+    {
+        "city": "Düsseldorf",
+        "admin": "North Rhine-Westphalia",
+        "country": "Germany",
+        "population_proper": "592393",
+        "iso2": "DE",
+        "capital": "admin",
+        "lat": "51.228304",
+        "lng": "6.793849",
+        "population": "1220000"
+    },
+    {
+        "city": "Dresden",
+        "admin": "Saxony",
+        "country": "Germany",
+        "population_proper": "486854",
+        "iso2": "DE",
+        "capital": "admin",
+        "lat": "51.048562",
+        "lng": "13.745794",
+        "population": "617515"
+    },
+    {
+        "city": "Potsdam", 
+        "admin": "Brandenburg", 
+        "country": "Germany", 
+        "population_proper": "145292", 
+        "iso2": "DE", 
+        "capital": "admin", 
+        "lat": "52.402247", 
+        "lng": "13.057122", 
+        "population": "218095"
+    },
+]
