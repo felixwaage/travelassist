@@ -24,7 +24,7 @@ function startUp(){
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 2000000) largeCities.push(cities[i]);
+		if(cities[i].population > 500000) largeCities.push(cities[i]);
 	}
 
 	updateWeather();
@@ -118,7 +118,7 @@ async function generateResultList(startPoint,date){
 			origin
 		}
 
-		response.push(responseItem);
+		if(typeof responseItem.db_route !== 'undefined') response.push(responseItem);
 	}
 
 	return createRanking(response);
