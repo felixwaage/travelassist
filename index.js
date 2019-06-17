@@ -2,6 +2,7 @@ var express = require('express');
 var weather = require('./weather');
 var bodyparser = require('body-parser');
 var db = require('./db');
+var request = require('request');
 
 const fs = require('fs');
 var largeCities = [];
@@ -23,7 +24,7 @@ function startUp(){
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 1000000) largeCities.push(cities[i]);
+		if(cities[i].population > 2000000) largeCities.push(cities[i]);
 	}
 
 	updateWeather();
@@ -33,6 +34,17 @@ function startUp(){
 }
 
 async function generateResultList(startPoint,date){
+	
+	var origin = {};
+
+	await db.getStationInfoBySearchString(startPoint).then((res) => {
+		origin = {
+			city_name: res.mailingAddress.city,
+			station_name: res.name,
+			lat: res.evaNumbers[0].geographicCoordinates.coordinates[1],
+			long: res.evaNumbers[0].geographicCoordinates.coordinates[0],
+		}
+	});
 	//Objekt zur Rückgabe an den Aufrufer
 	var response = [];
 	var weatherRankingSum;
@@ -102,7 +114,8 @@ async function generateResultList(startPoint,date){
 			weather_value: weatherRanking,
 			weather_information: weatherInformation,
 			db_route: connections,
-			city: largeCities[i]
+			city: largeCities[i],
+			origin
 		}
 
 		response.push(responseItem);
@@ -168,7 +181,7 @@ app.post('/api/getRaking', (req,res) => {
 
 //http://localhost:3000/api/getPrice/berlin/2019-06-13T00:00:00.000Z
 app.get('/api/getPrice/:start/:date', function (req, res) {
-		console.log('Request: \nhost:'+req.host+'\nCity: '+req.params.start+'\nDate: '+req.params.date);
+	console.log('Request: \nhost:'+req.host+'\nCity: '+req.params.start+'\nDate: '+req.params.date);
 		var start = req.params.start;
 		var date = req.params.date;
 	generateResultList(start,date).then((response) => {
@@ -180,10 +193,26 @@ app.get('/api/test/:callback', (req,res) => {
 	res.send('Parameter: '+req.params.callback);
 });
 
+// für moderaten Regen bspw: http://localhost:8080/api/getWeatherIcon/10d
+// für alle Icons siehe https://openweathermap.org/weather-conditions
+app.get('/api/getWeatherIcon/:id', (req,res) => {
+	iconID = req.params.id;
+	//QM TODO: Check einbauen
+	var requestSettings = {
+        url: "http://openweathermap.org/img/w/" + iconID + ".png",
+        method: 'GET',
+        encoding: null
+    };
+	request(requestSettings, (error, response, body) => {
+        res.set('Content-Type', 'image/png');
+        res.send(body);
+    });
+});
+
 app.get('/api/test2/largeCities', (req,res) => {
 	res.send(largeCities);
 });
 
 app.listen(8080, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port 8080!');
 });
