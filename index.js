@@ -175,6 +175,41 @@ function dateToDays (date) {
 	return daysBetween;
 }
 
+function convertWeatherIDtoIconID(weatherConditionID){
+	iconID = 0;
+	code_char = weatherConditionID.toString().charAt(0) ;
+	code = parseInt( code_char ) ;
+	switch (code) {
+		case 2:
+			iconID = "11d"; //thunderstorm
+			break;
+		case 3:
+			iconID = "09d"; //drizzle
+			break;
+		case 5:
+			iconID = "10d"; //rain
+			if (weatherConditionID == 511) iconID = "13d";
+			else if (weatherConditionID > 511) iconID = "09d";
+			break;
+		case 6:
+			iconID = "13d"; //snow
+			break;
+		case 7:
+			iconID = "50d"; //atmosphere
+			break;
+		case 8: //clouds
+			if (weatherConditionID == 800) iconID = "01d"; //clear sky
+			else if (weatherConditionID == 801) iconID = "02d";
+			else if (weatherConditionID == 802) iconID = "03d";
+			else if (weatherConditionID == 803 || weatherConditionID == 804) iconID = "04d";
+			break;
+		default:
+			break;
+	}
+	if (iconID == 0) return false;
+	return iconID;  
+}
+
 app.post('/api/getRaking', (req,res) => {
 	
 })
@@ -197,6 +232,12 @@ app.get('/api/test/:callback', (req,res) => {
 // für alle Icons siehe https://openweathermap.org/weather-conditions
 app.get('/api/getWeatherIcon/:id', (req,res) => {
 	iconID = req.params.id;
+	if (! Array('n', 'd').includes( iconID[iconID.length - 1] ) ) { //sowohl die Anfrage mit IconId (endend auf d oder n) als auch mit WetterCode ist möglich
+		iconID = convertWeatherIDtoIconID( parseInt(iconID) );
+		if (iconID == false) {
+			//Fehlerbehandlung: Icon konnte nicht bestimmt werden
+		}
+	}
 	//QM TODO: Check einbauen
 	var requestSettings = {
         url: "http://openweathermap.org/img/w/" + iconID + ".png",
