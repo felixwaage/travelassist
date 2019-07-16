@@ -2,8 +2,8 @@ module.exports = {
     DBUSER: 'postgres',
     DBHOST:  'localhost',
     DBNAME: 'postgres',
-    DBPW: '12345',
-    DBPORT: '5430',
+    DBPW: 'C771778q_',
+    DBPORT: '5432',
     LIMIT: 5,
     NUMBER: 3,
 }

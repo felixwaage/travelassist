@@ -1,31 +1,36 @@
 var db_price = require('db-prices');
 var stations = require('db-stations')
 var request = require('request');
+const { Pool } = require('pg');
+var config = require('./config');
+
+const oDBPool = new Pool({
+    user: config.DBUSER,
+    host: config.DBHOST,
+    database: config.DBNAME,
+    password: config.DBPW,
+    port: config.DBPORT,
+});
 
 stations.full
 
 function getStationInfoBySearchString(searchString){
-	return new Promise(function(resolve,reject){
-		var url = 'https://api.deutschebahn.com/stada/v2/stations?searchstring='+searchString+'*';
-		var header = { "Authorization" : "Bearer aafc6963b3c122a3bcf12b7109547308" };
-
-		request(url, {headers: header, json: true }, (err, res, body) => {
-		if (err) { reject(err); }
-			var Station = body.result[0];
-			resolve(Station);
-		});
+	
+	return new Promise((resolve,reject) => {
+		var sql = 'select * from mytable where name ='+'\''+searchString+'\'';
+		oDBPool.query(sql,(err,res) => {
+			if(err) reject(err);
+			resolve(res.rows[0]);
+		})
 	});
 }
 
 function getStationIDs(cityname){
-	
-	return new Promise(function(resolve,reject){
-		var url = 'https://api.deutschebahn.com/stada/v2/stations?searchstring='+cityname+'*';
-		var header = { "Authorization" : "Bearer aafc6963b3c122a3bcf12b7109547308" };
-
-		request(url, {headers: header, json: true }, (err, res, body) => {
-		if (err) { reject(err); }
-			var mainStations = body.result;
+	return new Promise((resolve,reject) => {
+		var sql = 'select * from mytable where mailingaddresscity=\''+cityname+'\';';
+		oDBPool.query(sql,(err,res) => {
+			if (err) { reject(err) }
+			var mainStations = res.rows;
 			var Cat1 = [];
 			var Cat2 = [];
 			var CatLow = [];
@@ -47,13 +52,13 @@ function getStationIDs(cityname){
 
 			var stationIds = [];
 			for(var i = 0; i < mainStations.length; i++){
-				var station = {id: mainStations[i].evaNumbers[0].number,
+				var station = {id: mainStations[i].evanumbers0number,
 											name: mainStations[i].name}
 				stationIds.push(station);
 			}
-			resolve(stationIds);
-		});
-	});
+			resolve(stationIds)
+		})
+	});	
 }
 
 async function getByConnection(connections,date){
@@ -118,13 +123,16 @@ function getRoute(start,end,date){
 		var connection = {};
 		var connections = [];
 
-		getStationIDs(start).then((res) =>{
-			start = res;
+		getStationInfoBySearchString(start).then((res) =>{
+			var origin = [];
+			var originElement = {id: res.evanumbers0number,name: res.name};
+			origin.push(originElement);
+
 			getStationIDs(end).then((res) => {
 				end = res;
-				for(var i = 0; i<start.length; i++){
+				for(var i = 0; i<origin.length; i++){
 					for(var x = 0; x<end.length; x++){
-						connection = {start: start[i],end: end[x]};
+						connection = {start: origin[i],end: end[x]};
 						connections.push(connection);
 					}
 				}

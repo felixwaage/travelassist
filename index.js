@@ -3,6 +3,7 @@ var weather = require('./weather');
 var bodyparser = require('body-parser');
 var db = require('./db');
 var request = require('request');
+var db_price = require('db-prices');
 
 const fs = require('fs');
 var largeCities = [];
@@ -39,10 +40,10 @@ async function generateResultList(startPoint,date){
 
 	await db.getStationInfoBySearchString(startPoint).then((res) => {
 		origin = {
-			city_name: res.mailingAddress.city,
+			city_name: res.mailingAddresscity,
 			station_name: res.name,
-			lat: res.evaNumbers[0].geographicCoordinates.coordinates[1],
-			long: res.evaNumbers[0].geographicCoordinates.coordinates[0],
+			lat: res.evanumbers0geographiccoordinatescoordinates1,
+			long: res.evanumbers0geographiccoordinatescoordinates0,
 		}
 	});
 	//Objekt zur Rückgabe an den Aufrufer
@@ -209,10 +210,6 @@ function convertWeatherIDtoIconID(weatherConditionID){
 	if (iconID == 0) return false;
 	return iconID;  
 }
-
-app.post('/api/getRaking', (req,res) => {
-	
-})
 
 //http://localhost:3000/api/getPrice/berlin/2019-06-13T00:00:00.000Z
 app.get('/api/getPrice/:start/:date', function (req, res) {
