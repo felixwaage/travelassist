@@ -33,6 +33,8 @@ function getWeatherInformationByCityName(city){
 				+','+humidity+','+weather_id+','+clouds+','+wind_speed+','+'\''+dt_value+'\''+')';
 	
 				oDBPool.query(sql,(err,res) => {
+					//TODO: Error Handling if city not found!
+					console.log()
 				})			
 			}
 		}
