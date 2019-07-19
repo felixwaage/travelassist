@@ -2,6 +2,7 @@ var express = require('express');
 var weather = require('./weather');
 var bodyparser = require('body-parser');
 var db = require('./db');
+var cors = require('cors');
 var request = require('request');
 var db_price = require('db-prices');
 
@@ -11,6 +12,7 @@ var largeCities = [];
 var app = express();
 
 app.use(bodyparser.json());
+app.use(cors());
 
 var date = new Date('2019-05-18T00:00:00.000Z');
 
