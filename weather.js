@@ -57,7 +57,7 @@ function getWeatherByCityName(city){
 			if(typeof err === 'undefined'){
 				resolve(res);
 			} else {
-				reject('City not found!');
+				reject(err + ' ...maybe City not found!');
 			}
 		});
 	});
