@@ -1,60 +1,27 @@
 [
-    {
-        "city": "Berlin",
-        "admin": "Berlin",
-        "country": "Germany",
-        "population_proper": "3094014",
-        "iso2": "DE",
-        "capital": "primary",
-        "lat": "52.516667",
-        "lng": "13.4",
+	{
+        "city": "Berlin", 
+        "admin": "Berlin", 
+        "country": "Germany", 
+        "population_proper": "3094014", 
+        "iso2": "DE", 
+        "capital": "primary", 
+        "lat": "52.516667", 
+        "lng": "13.4", 
         "population": "3406000"
-    },
-    {
-        "city": "Hamburg",
-        "admin": "Hamburg",
-        "country": "Germany",
-        "population_proper": "1739117",
-        "iso2": "DE",
-        "capital": "admin",
-        "lat": "53.575323",
-        "lng": "10.01534",
+    }, 
+	{
+        "city": "Hamburg", 
+        "admin": "Hamburg", 
+        "country": "Germany", 
+        "population_proper": "1739117", 
+        "iso2": "DE", 
+        "capital": "admin", 
+        "lat": "53.575323", 
+        "lng": "10.01534", 
         "population": "1757000"
-    },
-    {
-        "city": "Munich",
-        "admin": "Bavaria",
-        "country": "Germany",
-        "population_proper": "1260391",
-        "iso2": "DE",
-        "capital": "admin",
-        "lat": "48.15",
-        "lng": "11.583333",
-        "population": "1275000"
-    },
-    {
-        "city": "Düsseldorf",
-        "admin": "North Rhine-Westphalia",
-        "country": "Germany",
-        "population_proper": "592393",
-        "iso2": "DE",
-        "capital": "admin",
-        "lat": "51.228304",
-        "lng": "6.793849",
-        "population": "1220000"
-    },
-    {
-        "city": "Dresden",
-        "admin": "Saxony",
-        "country": "Germany",
-        "population_proper": "486854",
-        "iso2": "DE",
-        "capital": "admin",
-        "lat": "51.048562",
-        "lng": "13.745794",
-        "population": "617515"
-    },
-    {
+    }, 
+	{
         "city": "Potsdam", 
         "admin": "Brandenburg", 
         "country": "Germany", 
@@ -65,4 +32,81 @@
         "lng": "13.057122", 
         "population": "218095"
     },
+	{
+        "city": "Leipzig", 
+        "admin": "Saxony", 
+        "country": "Germany", 
+        "population_proper": "504971", 
+        "iso2": "DE", 
+        "capital": "minor", 
+        "lat": "51.34419", 
+        "lng": "12.386504", 
+        "population": "542529"
+    },
+	{
+        "city": "Stralsund", 
+        "admin": "Mecklenburg-Western Pomerania", 
+        "country": "Germany", 
+        "population_proper": "58976", 
+        "iso2": "DE", 
+        "capital": "minor", 
+        "lat": "54.315823", 
+        "lng": "13.088588", 
+        "population": "61368"
+    }, 
+	{
+        "city": "Heidelberg", 
+        "admin": "Baden-W\u00fcrttemberg", 
+        "country": "Germany", 
+        "population_proper": "143345", 
+        "iso2": "DE", 
+        "capital": "minor", 
+        "lat": "49.404123", 
+        "lng": "8.683733", 
+        "population": "426590"
+    }, 
+	{
+        "city": "Dresden", 
+        "admin": "Saxony", 
+        "country": "Germany", 
+        "population_proper": "486854", 
+        "iso2": "DE", 
+        "capital": "admin", 
+        "lat": "51.048562", 
+        "lng": "13.745794", 
+        "population": "617515"
+    },
+	{
+        "city": "Regensburg", 
+        "admin": "Bavaria", 
+        "country": "Germany", 
+        "population_proper": "129151", 
+        "iso2": "DE", 
+        "capital": "minor", 
+        "lat": "49.034512", 
+        "lng": "12.119234", 
+        "population": "164359"
+    }, 
+	{
+        "city": "Stuttgart", 
+        "admin": "Baden-W\u00fcrttemberg", 
+        "country": "Germany", 
+        "population_proper": "606588", 
+        "iso2": "DE", 
+        "capital": "admin", 
+        "lat": "48.782343", 
+        "lng": "9.180819", 
+        "population": "164359"
+    },
+	{
+        "city": "Kiel", 
+        "admin": "Schleswig-Holstein", 
+        "country": "Germany", 
+        "population_proper": "232758", 
+        "iso2": "DE", 
+        "capital": "admin", 
+        "lat": "54.312145", 
+        "lng": "10.135526", 
+        "population": "269427"
+    }
 ]

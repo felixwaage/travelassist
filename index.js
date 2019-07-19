@@ -21,11 +21,11 @@ function updateWeather(){
 }
 
 function startUp(){
-	let rawdata = fs.readFileSync('de.json');  
+	let rawdata = fs.readFileSync('cities.json');  
 	let cities = JSON.parse(rawdata);
 	
 	for(var i = 0; i < cities.length; i++){
-		if(cities[i].population > 500000) largeCities.push(cities[i]);
+		largeCities.push(cities[i]);
 	}
 
 	updateWeather();
